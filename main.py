@@ -1,11 +1,11 @@
-
-import time, os, colorama
+import os
+import time
 from colorama import Fore, init
-from time import sleep
+
 init(convert=True)
 storage = []
-banner = (f'''{Fore.RED}
-    
+banner = (fr'''{Fore.RED}
+
    _____ __  __          _____ _        _____        _     _______   _      _    
   / ____|  \/  |   /\   |_   _| |      |  __ \      | |   |__   __| (_)    | |   
  | |  __| \  / |  /  \    | | | |      | |  | | ___ | |_     | |_ __ _  ___| | __
@@ -15,48 +15,39 @@ banner = (f'''{Fore.RED}
 
 
     {Fore.RESET}''')
-print (banner)
+print(banner)
 
-def Clear():
-    os.system('cls')
 
 def ask_username():
-    username = ""
-    while not username:
-        temp = input(" > Enter your gmail username (NOT FULL EMAIL) ")
-        if "@" in temp:
-            Clear()
-            print(banner)
-            print(" > omg bro ur actually retarded JUST YOUR USERNAME BEFORE THE FUCKING @")
-            time.sleep(1.5)
-        else:
-            Clear()
-            print(banner)
-
-            username = temp
+    while True:
+        username = input("Enter Email Address: ")
+        if username:
+            break
     return username
 
 
-def shuffle(obj, init_pos):
+def alias_generator(address, index):
     global storage
-    temp = ""
-    for i in range(init_pos, len(obj)):
-        temp = obj[:i] + "." + obj[i:]
-        if temp not in storage:
-            if ".." not in temp:
-                storage.append(temp)
-                shuffle(temp, init_pos+2)
+    for _index in range(index, len(address)):
+        unique_address = address[:_index] + '.' + address[_index:]
+        storage.append(unique_address)
+        alias_generator(unique_address, _index + 2)
     return storage
 
-target = ask_username().replace(".", "")
-shuffle(target, 1)
-file = open('result.txt', 'w')
-for i in storage:
-    temp = str(i) + "@gmail.com"
-    file.write(temp)
-    file.write("\n")
 
-Clear()
+user_input = ask_username().replace(".", "").split('@')
+original_email = user_input[0]
+if len(user_input) == 2:
+    original_extension = user_input[-1]
+else:
+    original_extension = ''
+
+alias_generator(original_email, 1)
+
+with open('result.txt', 'w', encoding='utf-8') as fp:
+    fp.write(f'{original_extension}\n'.join(storage) + f'{original_extension}\n')
+
+os.system('cls')
 print(banner)
-print(" > Ok, I did my job goodbye")
+print("Ok, I Did My Job Goodbye")
 time.sleep(2)
