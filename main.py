@@ -45,7 +45,7 @@ else:
 alias_generator(original_email, 1)
 
 with open('result.txt', 'w', encoding='utf-8') as fp:
-    fp.write(f'{original_extension}\n'.join(storage) + f'{original_extension}\n')
+    fp.write(f'@{original_extension}\n'.join(storage) + f'@{original_extension}\n')
 
 os.system('cls')
 print(banner)
